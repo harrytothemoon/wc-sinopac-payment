@@ -8,6 +8,8 @@
  * file that was distributed with this source code.
  */
 
+defined( 'WCSP_INC' ) || exit;
+
 use Sinopac\QPay;
 
 /**
@@ -17,11 +19,11 @@ use Sinopac\QPay;
  * 
  * @return QPay
  */
-function get_qpay_instance($gateway): QPay
+function wcsp_get_qpay_instance( $gateway ): QPay
 {
     static $instance;
 
-    if (!$instance) {
+    if ( ! $instance ) {
 
         $shop_no = $gateway->api_shop_no  ?? '';
         $sandbox = false;
@@ -33,7 +35,7 @@ function get_qpay_instance($gateway): QPay
             $gateway->api_hash_b2 ?? '',
         );
     
-        if ( $gateway->testmode === 'yes' ) {
+        if ( 'yes' === $gateway->testmode ) {
             $shop_no = $gateway->test_shop_no;
             $sandbox = true;
     
@@ -50,10 +52,36 @@ function get_qpay_instance($gateway): QPay
             'hash'    => $hash_group,
         ]);
 
-        if ($sandbox) {
+        if ( $sandbox ) {
             $instance->enableSandbox();
         }
     }
 
     return $instance;
+}
+
+/**
+ * Get the meta key regarding transation details.
+ *
+ * @return string
+ */
+function wcsp_get_sinopac_meta_key() {
+    return 'payment_log_sinopac';
+}
+
+
+/**
+ * Render the HTML template.
+ *
+ * @param string $path The file's name
+ * @param array  $data The input variables.
+ *
+ * @return void
+ */
+function wcsp_template_render( $path, $data = array() )
+{
+    $path = __DIR__ . '/../views/' . $path . '.php';
+    extract( $data, EXTR_OVERWRITE );
+    require $path;
+    exit;
 }

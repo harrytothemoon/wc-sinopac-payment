@@ -8,6 +8,8 @@
  * file that was distributed with this source code.
  */
 
+defined( 'WCSP_INC' ) || exit;
+
 class SinoPac_Payment {
 
 	/**
@@ -35,6 +37,8 @@ class SinoPac_Payment {
 
 		add_action( 'template_redirect', array( $this, 'do_message_receive' ), 0 );
 		add_action( 'template_redirect', array( $this, 'do_backend_notify' ), 1 );
+
+		add_action( 'woocommerce_thankyou', array( $this, 'display_transation_inforamtion' ), 10, 1 );
 	}
 
 	/**
@@ -43,10 +47,17 @@ class SinoPac_Payment {
 	 * @return void
 	 */
 	public function load_payment_class() {
-		$file = __DIR__ . '/../includes/class-wc-gateway-sinopac-cc.php';
+		$files = array(
+			'cc',
+			'va',
+		);
 
-		if ( file_exists( $file ) ) {
-			include $file;
+		foreach ( $files as $file ) {
+			$file = __DIR__ . '/../includes/class-wc-gateway-sinopac-' . $file . '.php';
+
+			if ( file_exists( $file ) ) {
+				include $file;
+			}
 		}
 	}
 
@@ -59,25 +70,36 @@ class SinoPac_Payment {
 	 */
 	public function add_payment_gateway( $methods ) {
 		$methods['sinopac-cc'] = 'WC_SinoPac_Credit_Card_Payment';
+		$methods['sinopac-va'] = 'WC_SinoPac_Virtual_Account_Payment';
 		return $methods;
 	}
 
 	/**
 	 * Do things when receiving message from SinoPac platform.
+	 * 
+	 * @param bool $is_backend 
 	 *
 	 * @return void
 	 */
-	public function do_message_receive() {
+	public function do_message_receive( $is_backend = false ) {
 		global $wp;
 
-		if ( 0 === stripos( $wp->request, $this->return_endpoint ) ) {
+		if (
+			0 === stripos( $wp->request, $this->return_endpoint ) || 
+			$is_backend
+		) {
 			$success = false;
 			$order   = null;
 
 			$return_shop_no   = $_POST['ShopNo'] ?? '';
 			$return_pay_token = $_POST['PayToken'] ?? '';
 
-			$gateway = new WC_SinoPac_Credit_Card_Payment();
+			if ( $is_backend ) {
+				$gateway = new WC_SinoPac_Virtual_Account_Payment();
+			} else {
+				$gateway = new WC_SinoPac_Credit_Card_Payment();
+			}
+			
 			$sandbox = $gateway->testmode === 'yes' ? true : false;
 
 			if ( $sandbox ) {
@@ -87,7 +109,7 @@ class SinoPac_Payment {
 			}
 
 			if ( $shop_no === $return_shop_no && '' !== $return_pay_token ) {
-				$qpay    = get_qpay_instance( $gateway );
+				$qpay    = wcsp_get_qpay_instance( $gateway );
 				$results = $qpay->queryOrderByToken( $return_pay_token );
 		
 				if ( ! empty( $results['Message'] ) ) {
@@ -105,23 +127,42 @@ class SinoPac_Payment {
 
 						$order = wc_get_order( $order_id );
 
-						$transation_log = array(
-							'pay_token'     => $return_pay_token,
-							'type'          => $pay_type,
-							'transation_no' => $transaction_no,
-							'return_data'   => $transaction,
-						);
-
-						$message  = __( 'Transation is completed.', 'wc-sinopac-payment' ) . "\n";
-						$message .= __( 'Transation No', 'wc-sinopac-payment' ) . ': ' . $transaction_no . "\n";
-						$message .= __( 'Payment type') . ': ' . $pay_type_text . "\n";
-						$message .= __( 'Paid date', 'wc-sinopac-payment' ) . ': ' . $pay_date . "\n";
-						$message .= __( 'Paid amount', 'wc-sinopac-payment' ) . ': ' . $amount . "\n";
-
 						if ( $order ) {
+
+							$meta = $order->get_meta( wcsp_get_sinopac_meta_key() );
+
+							if ( empty( $meta ) ) {
+								$transation_log = array(
+									'pay_token'     => $return_pay_token,
+									'type'          => $pay_type,
+									'transation_no' => $transaction_no,
+									'return_data'   => $transaction,
+								);
+							} else {
+								$meta['pay_token']     = $return_pay_token;
+								$meta['type']          = $pay_type;
+								$meta['transation_no'] = $transaction_no;
+								$meta['return_data']   = $transaction;
+
+								$transation_log = $meta;
+							}
+
+							$message = '';
+	
+							if ( $is_backend ) {
+								$message .= __( 'Received notification from SinoPac:', 'wc-sinopac-payment' ) . "\n";
+								$message .= __( 'The customer has paid for this order successfully.', 'wc-sinopac-payment' ) . "\n";
+							}
+	
+							$message .= __( 'Transation is completed.', 'wc-sinopac-payment' ) . "\n";
+							$message .= __( 'Transation No', 'wc-sinopac-payment' ) . ': ' . $transaction_no . "\n";
+							$message .= __( 'Payment type') . ': ' . $pay_type_text . "\n";
+							$message .= __( 'Paid date', 'wc-sinopac-payment' ) . ': ' . $pay_date . "\n";
+							$message .= __( 'Paid amount', 'wc-sinopac-payment' ) . ': ' . $amount . "\n";
+
 							$order->add_order_note( $message );
 							$order->update_status( 'processing' );
-							$order->update_meta_data( 'payment_log_sinopac', $transation_log );
+							$order->update_meta_data( wcsp_get_sinopac_meta_key(), $transation_log );
 							$order->save();
 
 							$success = true;
@@ -147,10 +188,25 @@ class SinoPac_Payment {
 	 * @return void
 	 */
 	public function do_backend_notify() {
-		global $wp;
+		$this->do_message_receive( true );
+	}
 
-		if ( 0 === stripos( $wp->request, $this->return_endpoint ) ) {
+	/**
+	 * Display transation infomation if exists.
+	 *
+	 * @param int $order_id The order ID
+	 *
+	 * @return void
+	 */
+	public function display_transation_inforamtion( $order_id ) {
+		$order = wc_get_order( $order_id );
 
+		if ( $order ) {
+			$transation_data = $order->get_meta( wcsp_get_sinopac_meta_key() );
+			
+			if ( 'A' === $transation_data['type'] && ! empty( $transation_data['atm_data'] ) ) {
+				wcsp_template_render( 'order_received', $transation_data['atm_data'] );
+			}
 		}
 	}
 }

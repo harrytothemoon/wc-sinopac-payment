@@ -15,7 +15,7 @@ $settings = array(
     'enabled' => array(
         'title'   => __( 'Enable/Disable', 'wc-sinopac-payment' ),
         'type'    => 'checkbox',
-        'label'   => __( 'Enable Credit Card Payment', 'wc-sinopac-payment' ),
+        'label'   => __( 'Enable Virtal Account Payment', 'wc-sinopac-payment' ),
         'default' => 'no',
     ),
 
@@ -23,15 +23,15 @@ $settings = array(
         'title'       => __( 'Title', 'wc-sinopac-payment' ),
         'type'        => 'text',
         'description' => __( 'This controls the title which the user sees during checkout.', 'wc-sinopac-payment' ),
-        'default'     => __( 'SinoPac QPay: credit card', 'wc-sinopac-payment' ),
+        'default'     => __( 'SinoPac QPay: virtual account', 'wc-sinopac-payment' ),
         'desc_tip'    => false,
     ),
 
     'description' => array(
         'title'       => __( 'Description', 'wc-sinopac-payment' ),
         'type'        => 'text',
-        'description' => __( 'Allow your customers make payment with credit card through out SinoPac bank.', 'wc-sinopac-payment' ),
-        'default'     => __( 'Have your customers pay with credit card.', 'wc-sinopac-payment' ),
+        'description' => __( 'Allow your customers make payment with bank transfer to a virtual account through SinoPac bank.', 'wc-sinopac-payment' ),
+        'default'     => __( 'Have your customers pay with bank transfer to a virtual account.', 'wc-sinopac-payment' ),
         'desc_tip'    => false,
     ),
 
@@ -39,7 +39,7 @@ $settings = array(
         'title'       => __( 'Pay Button', 'wc-sinopac-payment' ),
         'type'        => 'text',
         'description' => __( 'Set if the place order button should be renamed on selection.', 'wc-sinopac-payment' ),
-        'default'     => __( 'Proceed to Pay', 'wc-sinopac-payment' ),
+        'default'     => __( 'Place Order', 'wc-sinopac-payment' ),
         'desc_tip'    => false,
     ),
 

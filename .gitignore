@@ -8,4 +8,3 @@ tests/report
 tmp
 clover.xml
 .phpunit.result.cache
-includes/class-wc-gateway-sinopac-va.php
