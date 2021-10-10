@@ -188,7 +188,11 @@ class SinoPac_Payment {
 	 * @return void
 	 */
 	public function do_backend_notify() {
-		$this->do_message_receive( true );
+		global $wp;
+
+		if ( 0 === stripos( $wp->request, $this->backend_endpoint ) ) {
+			$this->do_message_receive( true );
+		}
 	}
 
 	/**
