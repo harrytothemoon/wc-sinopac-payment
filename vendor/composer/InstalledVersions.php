@@ -19,44 +19,19 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '91931617dc4359938032113d4280e0cfa7ae4879',
+    'reference' => 'f7c0fa26480325b093e83d9a6ba4508536c6a0cc',
     'name' => 'terrylinooo/wc-sinopac-payment',
   ),
   'versions' => 
   array (
-    'monolog/monolog' => 
-    array (
-      'pretty_version' => '2.3.5',
-      'version' => '2.3.5.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'fd4380d6fc37626e2f799f29d91195040137eba9',
-    ),
-    'psr/log' => 
-    array (
-      'pretty_version' => '1.1.4',
-      'version' => '1.1.4.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'd49695b909c3b7628b6289db5479a1c204601f11',
-    ),
-    'psr/log-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '1.0.0 || 2.0.0 || 3.0.0',
-      ),
-    ),
     'terrylinooo/sinopac-php-sdk' => 
     array (
-      'pretty_version' => '0.0.10',
-      'version' => '0.0.10.0',
+      'pretty_version' => '0.1.0',
+      'version' => '0.1.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'da61d7568ba7706f1de32eca968537acb157f605',
+      'reference' => '6e36ee3875c5b65997dfbfefab59e58d82fb5691',
     ),
     'terrylinooo/wc-sinopac-payment' => 
     array (
@@ -65,7 +40,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '91931617dc4359938032113d4280e0cfa7ae4879',
+      'reference' => 'f7c0fa26480325b093e83d9a6ba4508536c6a0cc',
     ),
   ),
 );

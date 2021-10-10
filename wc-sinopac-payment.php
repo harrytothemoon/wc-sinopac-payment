@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WooCommerce SinoPac Payment
+ * Plugin Name: SinoPac Payment Gateway
  * Plugin URI:  https://github.com/terrylinooo/wc-sinopac-payment
  * Description: Credit card and virtual account (ATM) payment methods powered by SinoPac bank.
  * Version:     1.0.0

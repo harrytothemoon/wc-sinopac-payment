@@ -12,14 +12,6 @@ class ComposerStaticInit1d9324ca3108cf888d54e448e1737574
             'Sinopac\\QPay\\' => 13,
             'Sinopac\\' => 8,
         ),
-        'P' => 
-        array (
-            'Psr\\Log\\' => 8,
-        ),
-        'M' => 
-        array (
-            'Monolog\\' => 8,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -30,14 +22,6 @@ class ComposerStaticInit1d9324ca3108cf888d54e448e1737574
         'Sinopac\\' => 
         array (
             0 => __DIR__ . '/..' . '/terrylinooo/sinopac-php-sdk/src',
-        ),
-        'Psr\\Log\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
-        ),
-        'Monolog\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
     );
 
