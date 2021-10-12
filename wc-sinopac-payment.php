@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: SinoPac Payment Gateway
+ * Plugin Name: Payment Gateway for SinoPac Bank on WooCommerce
  * Plugin URI:  https://github.com/terrylinooo/wc-sinopac-payment
  * Description: Credit card and virtual account (ATM) payment methods powered by SinoPac bank.
  * Version:     1.0.0
@@ -50,7 +50,7 @@ define( 'WCSP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'WCSP_PLUGIN_PATH', __FILE__ );
 define( 'WCSP_PLUGIN_LANGUAGE_PACK', dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 define( 'WCSP_PLUGIN_VERSION', '1.0.0' );
-define( 'WCSP_PHP_SDK_VERSION', '0.0.10' );
+define( 'WCSP_PHP_SDK_VERSION', '0.1.0' );
 define( 'WCSP_PLUGIN_TEXT_DOMAIN', 'wc-sinopac-payment' );
 
 /**

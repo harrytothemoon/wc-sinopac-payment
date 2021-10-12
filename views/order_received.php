@@ -19,6 +19,6 @@ defined( 'WCSP_INC' ) || exit;
 	</li>
 	<li>
 		<?php esc_html_e( 'Virtual bank account:', 'wc-sinopac-payment' ); ?>
-		<strong><?php echo $atm_no;  ?></strong>
+		<strong><?php esc_html_e( $atm_no );  ?></strong>
 	</li>
 </ul>

@@ -96,7 +96,7 @@ class WC_SinoPac_Virtual_Account_Payment extends WC_Payment_Gateway {
         }
 
 		if ( $message['success'] ) {
-			wc_reduce_stock_levels( $order_id );
+
 			WC()->cart->empty_cart();
 
 			$transation_log = array(

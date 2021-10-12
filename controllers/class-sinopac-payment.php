@@ -91,8 +91,8 @@ class SinoPac_Payment {
 			$success = false;
 			$order   = null;
 
-			$return_shop_no   = $_POST['ShopNo'] ?? '';
-			$return_pay_token = $_POST['PayToken'] ?? '';
+			$return_shop_no   = isset( $_POST['ShopNo'] ) ? sanitize_text_field( $_POST['ShopNo'] ) : '';
+			$return_pay_token = isset( $_POST['PayToken'] ) ? sanitize_text_field( $_POST['PayToken'] ) : '';
 
 			if ( $is_backend ) {
 				$gateway = new WC_SinoPac_Virtual_Account_Payment();
