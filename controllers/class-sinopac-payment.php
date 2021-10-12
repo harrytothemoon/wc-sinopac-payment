@@ -38,7 +38,8 @@ class SinoPac_Payment {
 		add_action( 'template_redirect', array( $this, 'do_message_receive' ), 0 );
 		add_action( 'template_redirect', array( $this, 'do_backend_notify' ), 1 );
 
-		add_action( 'woocommerce_thankyou', array( $this, 'display_transation_inforamtion' ), 10, 1 );
+		add_action( 'woocommerce_thankyou', array( $this, 'display_transation_info' ), 10, 1 );
+		add_action( 'woocommerce_after_order_details', array( $this, 'display_payment_info_for_va' ), 10, 1 );
 	}
 
 	/**
@@ -196,19 +197,51 @@ class SinoPac_Payment {
 	}
 
 	/**
+	 * Display payment information for virtual account.
+	 *
+	 * @param WC_Order $order The order instance
+	 *
+	 * @return void
+	 */
+	public function display_payment_info_for_va( $order ) {
+		$payment_method = $order->get_payment_method();
+
+		if ( 'sinopac-va' === $payment_method ) {
+			$transation_data = $order->get_meta( wcsp_get_sinopac_meta_key() );
+
+			if ( 
+				'A' === $transation_data['type'] && 
+				! empty( $transation_data['atm_data'] )
+			) {
+			
+				$expired_time = strtotime( $order->get_date_created() ) + 86400 * 7;
+				$expired_date = wp_date( 'Y-m-d H:i', $expired_time );
+				$data         = $transation_data['atm_data'];
+
+				$data['expired_date'] = $expired_date;
+
+				wcsp_template_render( 'order_detail', $data );
+			}
+		}
+	}
+
+	/**
 	 * Display transation infomation if exists.
 	 *
 	 * @param int $order_id The order ID
 	 *
 	 * @return void
 	 */
-	public function display_transation_inforamtion( $order_id ) {
+	public function display_transation_info( $order_id ) {
 		$order = wc_get_order( $order_id );
 
 		if ( $order ) {
 			$transation_data = $order->get_meta( wcsp_get_sinopac_meta_key() );
 			
-			if ( 'A' === $transation_data['type'] && ! empty( $transation_data['atm_data'] ) ) {
+			if ( 
+				'A' === $transation_data['type'] && 
+				! empty( $transation_data['atm_data'] )
+			) {
 				wcsp_template_render( 'order_received', $transation_data['atm_data'] );
 			}
 		}
