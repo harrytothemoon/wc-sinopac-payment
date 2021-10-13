@@ -132,6 +132,11 @@ class SinoPac_Payment {
 
 							$meta = $order->get_meta( wcsp_get_sinopac_meta_key() );
 
+							// We have already received PayToken, so just skip.
+							if ( ! empty( $meta['pay_token'] ) ) {
+								return;
+							}
+
 							if ( empty( $meta ) ) {
 								$transation_log = array(
 									'pay_token'     => $return_pay_token,
@@ -151,7 +156,7 @@ class SinoPac_Payment {
 							$message = '';
 	
 							if ( $is_backend ) {
-								$message .= __( 'Received notification from SinoPac:', 'wc-sinopac-payment' ) . "\n";
+								$message .= __( 'Received notification from SinoPac bank:', 'wc-sinopac-payment' ) . "\n";
 								$message .= __( 'The customer has paid for this order successfully.', 'wc-sinopac-payment' ) . "\n";
 							}
 	
@@ -175,8 +180,12 @@ class SinoPac_Payment {
 			}
 
 			if ( $success && $order ) {
-				wp_redirect( $gateway->get_return_url( $order ) );
-				exit;
+				if ( $is_backend ) {
+					echo json_encode( array( 'Status' => 'S' ) );
+					exit;
+				} else {
+					wp_redirect( $gateway->get_return_url( $order ) );
+				}
 			} else {
 				wp_die( __( 'Something went wrong.', 'wc-sinopac-payment' ) );
 			}

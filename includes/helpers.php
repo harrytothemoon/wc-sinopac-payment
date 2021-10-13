@@ -83,5 +83,4 @@ function wcsp_template_render( $path, $data = array() )
     $path = __DIR__ . '/../views/' . $path . '.php';
     extract( $data, EXTR_OVERWRITE );
     require $path;
-    exit;
 }
