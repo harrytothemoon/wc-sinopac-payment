@@ -3,8 +3,8 @@
 Contributors: terrylin
 Tags: payment
 Requires at least: 4.7
-Tested up to: 5.8.1
-Stable tag: 1.0.0
+Tested up to: 6.0.1
+Stable tag: 1.0.1
 Requires PHP: 7.1.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
@@ -32,6 +32,10 @@ None for now.
 
 == Changelog ==
 
-= 1.0.0
+= 1.0.0 (2021-10-14)
 
 First release.
+
+= 1.0.1 (2022-07-27)
+
+Test for WooCommerce 6.0.1 and fix coding style.

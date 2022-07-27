@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the WooCommerce SinoPac Payment package.
  *
  * (c) Terry L. <contact@terryl.in>
@@ -23,11 +23,11 @@ defined( 'WCSP_INC' ) || exit;
 		</li>
 		<li>
 			<?php esc_html_e( 'Virtual bank account:', 'wc-sinopac-payment' ); ?>
-			<strong><?php esc_html_e( $atm_no );  ?></strong>
+			<strong><?php echo esc_html( $atm_no ); ?></strong>
 		</li>
 		<li>
 			<?php esc_html_e( 'Expires:', 'wc-sinopac-payment' ); ?>
-			<strong><?php esc_html_e( $expired_date );  ?></strong>
+			<strong><?php echo esc_html( $expired_date ); ?></strong>
 		</li>
 	</ul>
 

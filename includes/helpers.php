@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the WooCommerce SinoPac Payment package.
  *
  * (c) Terry L. <contact@terryl.in>
@@ -14,50 +14,51 @@ use Sinopac\QPay;
 
 /**
  * Initialize SinoPac QPay instance.
- * 
+ *
  * @param stdClass Payment Gateway
- * 
+ *
  * @return QPay
  */
-function wcsp_get_qpay_instance( $gateway ): QPay
-{
-    static $instance;
+function wcsp_get_qpay_instance( $gateway ): QPay {
+	static $instance;
 
-    if ( ! $instance ) {
+	if ( ! $instance ) {
 
-        $shop_no = $gateway->api_shop_no  ?? '';
-        $sandbox = false;
+		$shop_no = $gateway->api_shop_no ?? '';
+		$sandbox = false;
 
-        $hash_group = array(
-            $gateway->api_hash_a1 ?? '',
-            $gateway->api_hash_a2 ?? '',
-            $gateway->api_hash_b1 ?? '',
-            $gateway->api_hash_b2 ?? '',
-        );
-    
-        if ( 'yes' === $gateway->testmode ) {
-            $shop_no = $gateway->test_shop_no;
-            $sandbox = true;
-    
-            $hash_group = array(
-                $gateway->test_hash_a1 ?? '',
-                $gateway->test_hash_a2 ?? '',
-                $gateway->test_hash_b1 ?? '',
-                $gateway->test_hash_b2 ?? '',
-            );
-        }
+		$hash_group = array(
+			$gateway->api_hash_a1 ?? '',
+			$gateway->api_hash_a2 ?? '',
+			$gateway->api_hash_b1 ?? '',
+			$gateway->api_hash_b2 ?? '',
+		);
 
-        $instance = new QPay([
-            'shop_no' => $shop_no,
-            'hash'    => $hash_group,
-        ]);
+		if ( 'yes' === $gateway->testmode ) {
+			$shop_no = $gateway->test_shop_no;
+			$sandbox = true;
 
-        if ( $sandbox ) {
-            $instance->enableSandbox();
-        }
-    }
+			$hash_group = array(
+				$gateway->test_hash_a1 ?? '',
+				$gateway->test_hash_a2 ?? '',
+				$gateway->test_hash_b1 ?? '',
+				$gateway->test_hash_b2 ?? '',
+			);
+		}
 
-    return $instance;
+		$instance = new QPay(
+			array(
+				'shop_no' => $shop_no,
+				'hash'    => $hash_group,
+			)
+		);
+
+		if ( $sandbox ) {
+			$instance->enableSandbox();
+		}
+	}
+
+	return $instance;
 }
 
 /**
@@ -66,7 +67,7 @@ function wcsp_get_qpay_instance( $gateway ): QPay
  * @return string
  */
 function wcsp_get_sinopac_meta_key() {
-    return 'payment_log_sinopac';
+	return 'payment_log_sinopac';
 }
 
 
@@ -78,9 +79,8 @@ function wcsp_get_sinopac_meta_key() {
  *
  * @return void
  */
-function wcsp_template_render( $path, $data = array() )
-{
-    $path = __DIR__ . '/../views/' . $path . '.php';
-    extract( $data, EXTR_OVERWRITE );
-    require $path;
+function wcsp_template_render( $path, $data = array() ) {
+	$path = __DIR__ . '/../views/' . $path . '.php';
+	extract( $data, EXTR_OVERWRITE );
+	require $path;
 }

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the WooCommerce SinoPac Payment package.
  *
  * (c) Terry L. <contact@terryl.in>

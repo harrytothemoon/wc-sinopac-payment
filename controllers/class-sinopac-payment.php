@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the WooCommerce SinoPac Payment package.
  *
  * (c) Terry L. <contact@terryl.in>
@@ -215,22 +215,29 @@ class SinoPac_Payment {
 	public function display_payment_info_for_va( $order ) {
 		$payment_method = $order->get_payment_method();
 
-		if ( 'sinopac-va' === $payment_method ) {
-			$transation_data = $order->get_meta( wcsp_get_sinopac_meta_key() );
+		if ( 'sinopac-va' !== $payment_method ) {
+			return;
+		}
 
-			if ( 
-				'A' === $transation_data['type'] && 
-				! empty( $transation_data['atm_data'] )
-			) {
-			
-				$expired_time = strtotime( $order->get_date_created() ) + 86400 * 7;
-				$expired_date = wp_date( 'Y-m-d H:i', $expired_time );
-				$data         = $transation_data['atm_data'];
+		// Thankyou page might show order details, skip.
+		if ( is_checkout() && ! empty( is_wc_endpoint_url( 'order-received' ) ) ) {
+			return;
+		}
 
-				$data['expired_date'] = $expired_date;
+		$transation_data = $order->get_meta( wcsp_get_sinopac_meta_key() );
 
-				wcsp_template_render( 'order_detail', $data );
-			}
+		if ( 
+			'A' === $transation_data['type'] && 
+			! empty( $transation_data['atm_data'] )
+		) {
+		
+			$expired_time = strtotime( $order->get_date_created() ) + 86400 * 7;
+			$expired_date = wp_date( 'Y-m-d H:i', $expired_time );
+			$data         = $transation_data['atm_data'];
+
+			$data['expired_date'] = $expired_date;
+
+			wcsp_template_render( 'order-detail', $data );
 		}
 	}
 
@@ -244,15 +251,17 @@ class SinoPac_Payment {
 	public function display_transation_info( $order_id ) {
 		$order = wc_get_order( $order_id );
 
-		if ( $order ) {
-			$transation_data = $order->get_meta( wcsp_get_sinopac_meta_key() );
-			
-			if ( 
-				'A' === $transation_data['type'] && 
-				! empty( $transation_data['atm_data'] )
-			) {
-				wcsp_template_render( 'order_received', $transation_data['atm_data'] );
-			}
+		if ( ! $order ) {
+			return;
+		}
+
+		$transation_data = $order->get_meta( wcsp_get_sinopac_meta_key() );
+		
+		if ( 
+			'A' === $transation_data['type'] && 
+			! empty( $transation_data['atm_data'] )
+		) {
+			wcsp_template_render( 'order-received', $transation_data['atm_data'] );
 		}
 	}
 }
