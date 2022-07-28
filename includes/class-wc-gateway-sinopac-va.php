@@ -28,45 +28,45 @@ class WC_SinoPac_Virtual_Account_Payment extends WC_Payment_Gateway {
 		$this->method_title       = __( 'SinoPac QPay: virtual account', 'wc-sinopac-payment' );
 		$this->method_description = __( 'Have your customers pay with bank transfer to a virtual account.', 'wc-sinopac-payment' );
 
-        $this->init();
+		$this->init();
 	}
 
-    /**
-     * Initialize settings.
-     *
-     * @return void
-     */
-    function init() {
+	/**
+	 * Initialize settings.
+	 *
+	 * @return void
+	 */
+	function init() {
 
-        $this->init_form_fields();
-        $this->init_settings();
+		$this->init_form_fields();
+		$this->init_settings();
 
-        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-    }
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+	}
 
-    /**
+	/**
 	 * Initialise Gateway Settings Form Fields.
-     *
-     * @return void
-     */
+	 *
+	 * @return void
+	 */
 	function init_form_fields() {
 	
 		$this->form_fields = include __DIR__ . '/settings-va-payment.php';
 
-        foreach ( $this->form_fields as $key => $value ) {
-            $option = $this->get_option( $key );
+		foreach ( $this->form_fields as $key => $value ) {
+			$option = $this->get_option( $key );
 
-            if ( '' !== $option ) {
-                $this->{$key} = $this->get_option( $key );
-            }
-        }
+			if ( '' !== $option ) {
+				$this->{$key} = $this->get_option( $key );
+			}
+		}
 	}
 
 	/**
 	 * Process the payment and return the result.
 	 *
 	 * @param int $order_id Order ID.
-     *
+	 *
 	 * @return array
 	 */
 	public function process_payment( $order_id ) {
@@ -88,12 +88,12 @@ class WC_SinoPac_Virtual_Account_Payment extends WC_Payment_Gateway {
 		];
 
 		try {
-            $results = $qpay->createOrderByATM( $api_data );
-            $message = $this->parse_message( $results );
+			$results = $qpay->createOrderByATM( $api_data );
+			$message = $this->parse_message( $results );
 
-        } catch ( QPayException $e ) {
+		} catch ( QPayException $e ) {
 			throw new QPayException( $e->getMessage() );
-        }
+		}
 
 		if ( $message['success'] ) {
 

@@ -15,7 +15,7 @@ use Sinopac\QPay;
 /**
  * Initialize SinoPac QPay instance.
  *
- * @param stdClass Payment Gateway
+ * @param stdClass $gateway Payment Gateway
  *
  * @return QPay
  */
@@ -81,6 +81,7 @@ function wcsp_get_sinopac_meta_key() {
  */
 function wcsp_template_render( $path, $data = array() ) {
 	$path = __DIR__ . '/../views/' . $path . '.php';
+	// phpcs:ignore
 	extract( $data, EXTR_OVERWRITE );
 	require $path;
 }
